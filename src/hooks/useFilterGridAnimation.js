@@ -205,6 +205,15 @@ export function useGridFlip(gridRef, dep) {
             el.style.transform = ''
             const clearZ = () => {
               el.style.zIndex = ''
+              // The inline transition set above only lists `transform` —
+              // left in place, it permanently overrides the CSS class's
+              // own transition (translate/border-color/box-shadow, for the
+              // hover lift), since an inline shorthand replaces the whole
+              // declaration rather than merging with it. Clearing it once
+              // the slide is done hands control back to the stylesheet, so
+              // a card that has been FLIP'd at least once doesn't lose its
+              // smooth hover transition forever after.
+              el.style.transition = ''
               el.removeEventListener('transitionend', onTransitionEnd)
               clearTimeout(fallbackId)
               zIndexCleanup.current.delete(id)

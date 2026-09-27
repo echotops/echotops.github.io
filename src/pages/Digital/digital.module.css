@@ -63,10 +63,11 @@
 }
 
 /* ---- Grid ---- */
-/* minmax basis chosen so 4 columns (not 5) fit once this page's
-   content-width reaches its own 1000px cap, then drops to 3/2/1 as the
-   viewport narrows — same idea as Hardware's grid but tuned for this
-   page's own column count rather than matching its exact card width. */
+/* minmax basis chosen so 4 columns fit once this page's content-width
+   reaches its own 1000px cap, then drops to 3/2/1 as the viewport narrows —
+   a stacked, roughly-portrait card (see .card below) reads best at this
+   smaller, denser size, browsed as a gallery, rather than Software's wider
+   landscape cards. */
 /* position:relative — the positioning context for .card[data-leaving]
    below, which pins itself with top/left measured relative to this
    container. isolation:isolate scopes card stacking (moving cards at
@@ -106,9 +107,13 @@
   }
 }
 
-/* Shared card language with Hardware — see that file's .card comment for
-   the full rationale (padded surface, inset photo, accent-ring hover,
-   text never overlaid on the photo). */
+/* Same card language as the Projects grid (image + overlay badge, title +
+   arrow-circle head, subtitle below — see projectsGrid.module.css for the
+   fuller rationale), scaled down throughout for this page's denser,
+   smaller-card gallery grid: a shorter image, smaller type, a smaller
+   arrow circle. Unlike Projects, every entry here always has a photo, so
+   there's no photo-less case to design around — border stays transparent
+   at rest (accent only on hover), the same as this page always had. */
 .card {
   /* position:relative + z-index:0 — a baseline stacking context so
      useGridFlip can lift a card above its siblings (z-index:2, set via
@@ -118,11 +123,18 @@
   z-index: 0;
   display: flex;
   flex-direction: column;
-  padding: 11px;
+  overflow: hidden;
   background-color: var(--surface);
-  border: 2px solid transparent;
-  border-radius: var(--radius-lg);
-  transition: border-color 0.3s ease;
+  border: 1px solid transparent;
+  /* Matches Projects' own card radius, now that the two share the same
+     card design — see projectsGrid.module.css for the fuller rationale. */
+  border-radius: 12px;
+  /* translate, not transform, for the hover lift — the FLIP hook drives
+     `transform` directly via JS for repositioning, so using the same
+     property here would fight it. translate/scale/rotate are independent
+     CSS properties that composite with transform, so this hover lift
+     coexists with FLIP with no conflict. */
+  transition: translate 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   /* Delayed 0.1s so the fade finishes exactly when a sibling's FLIP
      translate does (useGridFlip's 0.35s translate: 0.25s fade + 0.1s
      delay = 0.35s) — an entering card settles into place visually at the
@@ -154,56 +166,98 @@
 }
 
 .card:hover {
+  translate: 0 -5px;
   border-color: var(--accent);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
 }
 
 .cardMedia {
-  border-radius: var(--radius-sm);
-  overflow: hidden;
+  position: relative;
 }
 
-.cardMedia img {
+.cardImg {
   display: block;
   width: 100%;
-  height: 160px;
+  height: 130px;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.4s ease;
 }
 
-.card:hover .cardMedia img {
+.card:hover .cardImg {
   transform: scale(1.03);
 }
 
-.cardBody {
-  padding: 13px 3px 3px;
+/* Sim/type badges over the photo — same pill sizing as Software/Projects'
+   tags/year badge (4px 11px padding, 15px radius, 12px type), not a
+   separately shrunk-down size, even though the rest of this card is
+   scaled smaller for this page's denser grid. */
+.cardBadges {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1;
+  display: flex;
+  gap: 4px;
 }
 
-/* Explicit px (not var(--text-lg)/var(--text-sm)) — see the same note on
-   Hardware's .cardTitle/.cardDesc. */
+.cardBadges span {
+  padding: 4px 11px;
+  background-color: rgba(10, 12, 18, 0.65);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--accent);
+  border-radius: 15px;
+  color: var(--primary);
+  font-size: 12px;
+}
+
+/* position:relative + right padding sized to clear the arrow circle
+   (26px) plus its gap from the edge — the arrow itself is positioned
+   absolutely within this (see .cardArrow below) rather than sitting in
+   flow next to the title, so it can be centered on the *whole* text
+   block's height (title + subtitle together), not just the title's own
+   line. In flow, next to just the title, it was reading too high — pinned
+   to the first line's height rather than the card's actual text mass. */
+.cardBody {
+  position: relative;
+  padding: 10px 44px 12px 12px;
+}
+
 .cardTitle {
   margin: 0;
   color: var(--primary);
-  font-size: 18px;
+  font-size: 15px;
   font-weight: var(--weight-medium);
+  line-height: 1.3;
+}
+
+/* Circular arrow target — same static "this card is a link" cue as
+   Projects', scaled down to match this card's smaller title/icon sizes.
+   Centered vertically against .cardBody as a whole (see the comment
+   there) rather than sitting in flow next to the title. */
+.cardArrow {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  color: var(--accent);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card:hover .cardArrow {
+  background-color: var(--accent);
+  color: var(--background);
 }
 
 .cardSub {
-  margin: 5px 0 0;
-  color: var(--secondary);
-  font-size: 11px;
-}
-
-.cardMeta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 11px;
-}
-
-.cardMetaItem {
-  padding: 4px 11px;
-  border: 1px solid var(--accent);
-  border-radius: 15px;
+  margin: 3px 0 0;
   color: var(--secondary);
   font-size: 11px;
 }

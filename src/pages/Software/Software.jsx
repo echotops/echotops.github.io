@@ -6,19 +6,20 @@ import { useGridFlip, useRenderedIds } from '../../hooks/useFilterGridAnimation'
 import styles from './software.module.css'
 
 // `internal` projects are React-routed write-up pages (ProjectLayout, like
-// Hardware's project pages) and link via <Link> for client-side navigation.
+// the Projects page's write-ups) and link via <Link> for client-side
+// navigation.
 // The rest are standalone static apps under public/software/projects/ and
 // link via a plain <a> (a real page load, since they're separate,
 // non-SPA pages).
 const projects = [
-  { id: 'vector-fields', title: 'Vector Fields', desc: 'Plot vector fields and operators like divergence and curl', img: '/software/assets/imgs/vectors.png', href: 'https://echotops.github.io/vector-fields/', external: true, tags: ['Math', 'Physics'] },
-  { id: 'circuits', title: 'Circuits', desc: 'Explore circuits with batteries, resistors, and more', img: '/software/assets/imgs/circuits.png', href: 'https://echotops.github.io/circuits/', external: true, tags: ['Physics'] },
-  { id: 'covariant', title: 'Covariant.jl', desc: 'Differential geometry with mathematical notation in Julia', img: '/software/assets/imgs/covariant.png', href: 'https://echotops.github.io/Covariant.jl/', external: true, tags: ['Math', 'Physics'] },
-  { id: 'electromagnetism', title: 'Electromagnetism', desc: 'Generate electric and magnetic fields from parametrized charges', img: '/software/assets/imgs/electromagnetism.png', href: '/software/projects/electromagnetism', internal: true, tags: ['Physics'] },
-  { id: 'matrices', title: 'Matrices', desc: 'Visualize matrix transformations, eigenvectors, and eigenvalues', img: '/software/assets/imgs/matrices.png', href: 'https://echotops.github.io/matrices/', external: true, tags: ['Math'] },
-  { id: 'charges', title: 'Charges', desc: 'Place charges and simulate motion over time', img: '/software/assets/imgs/charges.png', href: 'https://echotops.github.io/charges/', external: true, tags: ['Physics'] },
-  { id: 'relativity', title: 'Relativity', desc: 'See how Lorentz transformations act on vectors in spacetime', img: '/software/assets/imgs/minkowski.png', href: 'https://echotops.github.io/minkowski-diagrams/', external: true, tags: ['Physics'] },
-  { id: 'fluids', title: 'Fluids', desc: 'Simulate fluid flow around objects', img: '/software/assets/imgs/fluid.png', href: '/software/projects/fluids', internal: true, tags: ['Physics'] },
+  { id: 'vector-fields', title: 'Vector Fields', desc: 'Plot vector fields and operators like divergence and curl', img: '/software/thumbnails/vectors.png', href: 'https://echotops.github.io/vector-fields/', external: true, tags: ['Math', 'Physics'] },
+  { id: 'circuits', title: 'Circuits', desc: 'Explore circuits with batteries, resistors, and more', img: '/software/thumbnails/circuits.png', href: 'https://echotops.github.io/circuits/', external: true, tags: ['Physics'] },
+  { id: 'covariant', title: 'Covariant.jl', desc: 'Differential geometry with mathematical notation in Julia', img: '/software/thumbnails/covariant.png', href: 'https://echotops.github.io/Covariant.jl/', external: true, tags: ['Math', 'Physics'] },
+  { id: 'electromagnetism', title: 'Electromagnetism', desc: 'Generate electric and magnetic fields from parametrized charges', img: '/software/thumbnails/electromagnetism.png', href: '/software/projects/electromagnetism', internal: true, tags: ['Physics'] },
+  { id: 'matrices', title: 'Matrices', desc: 'Visualize matrix transformations, eigenvectors, and eigenvalues', img: '/software/thumbnails/matrices.png', href: 'https://echotops.github.io/matrices/', external: true, tags: ['Math'] },
+  { id: 'charges', title: 'Charges', desc: 'Place charges and simulate motion over time', img: '/software/thumbnails/charges.png', href: 'https://echotops.github.io/charges/', external: true, tags: ['Physics'] },
+  { id: 'relativity', title: 'Relativity', desc: 'See how Lorentz transformations act on vectors in spacetime', img: '/software/thumbnails/minkowski.png', href: 'https://echotops.github.io/minkowski-diagrams/', external: true, tags: ['Physics'] },
+  { id: 'fluids', title: 'Fluids', desc: 'Simulate fluid flow around objects', img: '/software/thumbnails/fluid.png', href: '/software/projects/fluids', internal: true, tags: ['Physics'] },
 ]
 
 const filters = [
@@ -45,7 +46,7 @@ export default function Software() {
         <PageHeader
           title="Software Projects"
           subtitle="Interactive physics and math simulations"
-          banner="/software/assets/banner.png"
+          banner="/software/banner.png"
         >
           <div className={styles.filters}>
             {filters.map((f) => (

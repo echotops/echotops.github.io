@@ -24,6 +24,7 @@
 .logo {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   margin-right: auto;
   overflow: hidden;
   opacity: 1;
@@ -49,10 +50,28 @@
   display: flex;
 }
 
+/* Past this width, --content-width (min(90%, 1000px)) is pinned at its
+   1000px cap and stops growing with the viewport, so the navbar's own
+   content area (between its padding) stays fixed too — the logo's
+   margin-right:auto below just keeps pushing the links flush against that
+   now-fixed right edge, reading as an oversized, unbalanced gap next to
+   the logo that never closes no matter how wide the window gets. Pulling
+   the links in by a fixed amount here (and only here, not at narrower
+   desktop widths where every pixel is already accounted for by the
+   hamburger breakpoint's own fit math below) fixes that without
+   reopening the squeeze this page's fewer nav items just fixed. 1120px =
+   just past 1111px, the width at which 90% of the viewport first reaches
+   1000px. */
+@media (min-width: 1120px) {
+  .linksSlide {
+    margin-right: 90px;
+  }
+}
+
 .links {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 38px;
   transition: gap 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -180,9 +199,10 @@
   border-bottom-color: var(--accent);
 }
 
-/* Switch to the hamburger before the five links stop fitting on one line
-   (they need ~861px), so they never overflow or wrap. */
-@media (max-width: 880px) {
+/* Switch to the hamburger before the four links (Photography's removal
+   dropped this from five) stop fitting on one line (they need ~722px), so
+   they never overflow or wrap. */
+@media (max-width: 750px) {
   .navbar {
     padding: 0 30px;
     gap: 0;

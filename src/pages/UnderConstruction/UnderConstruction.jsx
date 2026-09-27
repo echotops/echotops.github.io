@@ -9,7 +9,7 @@ export default function UnderConstruction() {
         <p className={styles.eyebrow}>Coming Soon</p>
         <h1 className={styles.title}>Under Construction</h1>
         <p className={styles.subtitle}>This project write-up hasn't been published yet — check back soon.</p>
-        <Link className={styles.back} to="/hardware">← Back to Hardware</Link>
+        <Link className={styles.back} to="/">← Back to Home</Link>
       </main>
       <Footer />
     </>

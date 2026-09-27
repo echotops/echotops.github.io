@@ -1,6 +1,6 @@
 :root {
   /* Dark, mostly-neutral grey scale with a slight blue lean (validated as a
-     page-scoped trial on Hardware first) — replaces the earlier, more
+     page-scoped trial on Projects first) — replaces the earlier, more
      strongly blue-tinted values. */
   --background: #0e0f13;
   --surface: #17181e;
@@ -18,7 +18,8 @@
   --radius-sm: 6px;
 
   /* Small/medium/large text scale, validated as a page-scoped trial on
-     Hardware (as --hw-text-*) before being promoted here. */
+     Projects (as --hw-text-*, from when that page was named Hardware)
+     before being promoted here. */
   --text-sm: 14px;
   --text-md: 16px;
   --text-lg: 22px;
@@ -59,9 +60,18 @@ a {
   text-decoration: none;
 }
 
+/* Target of every scrollIntoView('#work') call (Navbar's "Projects" link,
+   the hero's own "Projects ↓" prompt, and Home's own state-driven landing
+   — see those files). Without this, the target's top aligns flush with
+   the very top of the viewport, which the sticky navbar then sits on top
+   of and covers — scroll-margin-top holds it back by exactly the navbar's
+   own height instead, so it lands fully visible just below the nav. */
+#work {
+  scroll-margin-top: calc(var(--navbar-height) - 1px);
+}
+
 /* Standard page-load fade-in. Every page renders its content in <main>, so it
-   also re-runs on route changes (each page mounts a fresh <main>). Hardware
-   layers its per-row slide-up on top of this. */
+   also re-runs on route changes (each page mounts a fresh <main>). */
 @keyframes page-fade-in {
   from {
     opacity: 0;

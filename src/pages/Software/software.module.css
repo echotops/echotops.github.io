@@ -222,7 +222,7 @@
    text column) — that split only works with enough card width for both to
    breathe. Below this, a single column's cards are too narrow for it (the
    image bleeds straight through the text), so switch to the same stacked
-   image-on-top layout used elsewhere on the site (Hardware/Home/Digital). */
+   image-on-top layout used elsewhere on the site (Projects/Home/Digital). */
 @media (max-width: 480px) {
   .card {
     height: auto;

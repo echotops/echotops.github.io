@@ -1,0 +1,170 @@
+/* ---- Hero ---- */
+/* Capped, not just 100vh - navbar-height: the content itself doesn't grow
+   with viewport height, so on a normal-to-tall monitor an uncapped
+   min-height just leaves the bio floating in a lot of empty black space
+   above and below it. */
+/* width/margin here (not left to a page-level wrapper) so this component
+   is self-contained regardless of where it's rendered — Home renders it
+   directly in <main>, but Projects renders a copy with no such wrapper of
+   its own (see Projects.jsx). */
+.hero {
+  position: relative;
+  width: var(--content-width);
+  margin: 0 auto;
+  min-height: min(calc(100vh - var(--navbar-height)), 700px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 0 100px;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 60px;
+  align-items: center;
+}
+
+.heroText {
+  max-width: 560px;
+}
+
+.name {
+  margin: 0;
+  color: var(--primary);
+  font-size: 52px;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.tagline {
+  margin: 20px 0 0;
+  color: var(--secondary);
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.ctaRow {
+  margin-top: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.ctaPrimary,
+.ctaSecondary {
+  padding: 11px 22px;
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  /* Buttons use a color-shift hover (no lift, no scale) — consistent with
+     the scroll prompt below and the pattern established on Projects. */
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.ctaPrimary {
+  background-color: var(--accent);
+  color: #10121c;
+  font-weight: 500;
+}
+
+.ctaPrimary:hover {
+  background-color: #96acff;
+}
+
+.ctaSecondary {
+  color: var(--primary);
+  border: 1px solid var(--border);
+}
+
+.ctaSecondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.heroImageWrap {
+  display: flex;
+  justify-content: center;
+}
+
+.heroImage {
+  width: 260px;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  box-shadow: 0 0 40px rgba(124, 152, 255, 0.15);
+}
+
+.scrollPrompt {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--secondary);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+}
+
+.scrollPrompt:hover {
+  color: var(--primary);
+}
+
+.scrollPrompt svg {
+  animation: scrollBounce 1.8s ease-in-out infinite;
+}
+
+.scrollPrompt[data-hidden] {
+  opacity: 0;
+  transform: translateX(-50%) translateY(8px);
+  pointer-events: none;
+}
+
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+@media (max-width: 800px) {
+  .hero {
+    padding: 30px 0 80px;
+  }
+
+  .heroGrid {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 32px;
+  }
+
+  .heroGrid > .heroImageWrap {
+    order: -1;
+  }
+
+  .heroText {
+    max-width: none;
+  }
+
+  .name {
+    font-size: 40px;
+  }
+
+  .ctaRow {
+    justify-content: center;
+  }
+}
+
+/* The 40px step above is tuned for tablet-width resizing; at an actual
+   phone width it still dominates the screen more than it needs to. */
+@media (max-width: 480px) {
+  .name {
+    font-size: 32px;
+  }
+}
