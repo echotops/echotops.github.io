@@ -10,7 +10,14 @@
         const redirect = sessionStorage.getItem('redirect');
         if (redirect) {
             sessionStorage.removeItem('redirect');
-            window.history.replaceState(null, '', redirect);
+            // GitHub Pages 301s any path that matches a real folder in the
+            // build (e.g. /projects, since public/projects holds the
+            // project images) to "/projects/" before serving 404.html, so the
+            // saved path can arrive with a trailing slash. The app compares
+            // against exact paths like "/projects", so strip it here.
+            const url = new URL(redirect, window.location.origin);
+            url.pathname = url.pathname.replace(/\/+$/, '') || '/';
+            window.history.replaceState(null, '', url.pathname + url.search + url.hash);
         }
         </script>
       <script type="module" crossorigin src="/assets/index-BRIxq_DZ.js"></script>
