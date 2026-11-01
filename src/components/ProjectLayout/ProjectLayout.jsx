@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import Prism from 'prismjs'
+import 'prismjs/components/prism-julia'
 import Footer from '../Footer/Footer'
 import styles from './projectLayout.module.css'
 
@@ -66,14 +68,75 @@ export function FigureGrid({ columns = 2, children }) {
   )
 }
 
-// Preformatted code, e.g. <CodeBlock>{`function foo()\n  ...\nend`}</CodeBlock>.
-// No syntax highlighting — plain monospace, matching the site's otherwise
-// dependency-free approach.
-export function CodeBlock({ children }) {
+// KaTeX is loaded on first use rather than imported at the top: this file is
+// part of the main bundle (every page that uses ProjectLayout is imported by
+// App.jsx), and KaTeX plus its stylesheet are far larger than the rest of
+// this file. A dynamic import splits them into their own chunk, fetched only
+// on a page that actually renders an <Equation>.
+let katexPromise = null
+function loadKatex() {
+  if (!katexPromise) {
+    katexPromise = Promise.all([import('katex'), import('katex/dist/katex.min.css')]).then(([m]) => m.default)
+  }
+  return katexPromise
+}
+
+// TeX, e.g. <Equation>{String.raw`\mathbf{F} = m\mathbf{a}`}</Equation> for a
+// centered display equation, or <Equation inline>...</Equation> inside a
+// Paragraph. String.raw keeps the TeX backslashes from being read as JS escapes.
+export function Equation({ children, inline = false }) {
+  const tex = String(children)
+  const [html, setHtml] = useState('')
+
+  useEffect(() => {
+    let cancelled = false
+    loadKatex().then((katex) => {
+      if (!cancelled) setHtml(katex.renderToString(tex, { displayMode: !inline, throwOnError: false }))
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [tex, inline])
+
+  const Tag = inline ? 'span' : 'div'
+  return <Tag className={inline ? undefined : styles.equation} dangerouslySetInnerHTML={{ __html: html }} />
+}
+
+// Syntax-highlighted code, e.g. <CodeBlock>{`function foo()\n  ...\nend`}</CodeBlock>.
+// Same look as the Covariant.jl docs' code blocks: Prism's Julia grammar with
+// Tokyo Night token colors (see .code in projectLayout.module.css) and a copy
+// button. Highlighted to an HTML string rather than via Prism.highlightElement
+// on a mounted node, so React never has to reconcile a DOM Prism has rewritten.
+// The <code> deliberately has no "language-*" class: Prism's own auto-run on
+// page load would otherwise find it and re-highlight the finished markup.
+export function CodeBlock({ children, lang = 'julia' }) {
+  const code = String(children)
+  const html = useMemo(
+    () => Prism.highlight(code, Prism.languages[lang], lang),
+    [code, lang],
+  )
+  const [copied, setCopied] = useState(false)
+  const timerRef = useRef(null)
+
+  useEffect(() => () => clearTimeout(timerRef.current), [])
+
+  const copy = () => {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopied(true)
+      clearTimeout(timerRef.current)
+      timerRef.current = setTimeout(() => setCopied(false), 1500)
+    })
+  }
+
   return (
-    <pre className={styles.code}>
-      <code>{children}</code>
-    </pre>
+    <div className={styles.codeBlock}>
+      <button type="button" className={styles.codeCopy} data-copied={copied || undefined} onClick={copy}>
+        {copied ? 'copied' : 'copy'}
+      </button>
+      <pre className={styles.code}>
+        <code dangerouslySetInnerHTML={{ __html: html }} />
+      </pre>
+    </div>
   )
 }
 

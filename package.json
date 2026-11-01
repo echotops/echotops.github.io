@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "katex": "^0.19.1",
+    "prismjs": "^1.30.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.14.2"

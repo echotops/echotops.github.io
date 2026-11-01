@@ -49,8 +49,13 @@
   /* No bottom padding here: the last child (Paragraph/Figure/FigureGrid/
      Table) already carries its own bottom margin, and Footer carries its
      own top padding — adding a third space on top of both is what made the
-     gap before the footer feel oversized. */
+     gap before the footer feel oversized. The border below is what keeps
+     that last margin inside .body (a margin only collapses out through a
+     parent with no border or padding), so the rule sits after the margin,
+     the same way the grid pages' own bottom border separates them from the
+     footer. It matches .header's width, so the two rules line up. */
   padding: 44px 0 0;
+  border-bottom: 1px solid var(--border);
 }
 
 .heading {
@@ -121,19 +126,105 @@
   max-width: none;
 }
 
-/* ---- Code ---- */
-.code {
-  margin: 32px 0;
-  padding: 18px 20px;
-  background-color: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
+/* ---- Equation ---- */
+/* Centered display math, like the Covariant.jl docs. min-height holds roughly
+   the equation's space while KaTeX loads, so the page doesn't jump when it
+   arrives; overflow-x lets a long equation scroll instead of breaking the
+   layout on narrow screens. */
+.equation {
+  min-height: 3.5em;
+  margin: 24px 0;
   overflow-x: auto;
-  color: var(--secondary);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 13px;
-  line-height: 1.6;
+  color: var(--primary);
+  text-align: center;
 }
+
+.equation :global(.katex-display) {
+  margin: 0;
+}
+
+/* ---- Code ---- */
+/* Matches the Covariant.jl docs' code blocks: a block darker than the page,
+   mono type at 13px/1.7, Prism token colors from the shared Tokyo Night
+   palette (--tn_* in index.css), and a copy button that fades in on hover. */
+.codeBlock {
+  position: relative;
+  margin: 32px 0;
+  background-color: #0a0b0e;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.codeCopy {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+  padding: 3px 7px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--secondary);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: all 0.12s;
+}
+
+.codeBlock:hover .codeCopy,
+.codeCopy:hover {
+  opacity: 1;
+}
+
+.codeCopy:hover,
+.codeCopy[data-copied] {
+  border-color: var(--accent);
+}
+
+.codeCopy[data-copied] {
+  color: var(--accent);
+}
+
+.code {
+  margin: 0;
+  padding: 20px;
+  overflow-x: auto;
+  color: var(--tn_white);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.code code {
+  padding: 0;
+  background: none;
+  border: none;
+  font: inherit;
+}
+
+.code::-webkit-scrollbar {
+  height: 4px;
+}
+
+.code::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.code::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.code :global(.token.keyword) { color: var(--tn_purple); }
+.code :global(.token.number) { color: var(--tn_orange); }
+.code :global(.token.operator) { color: var(--tn_blue); }
+.code :global(.token.string) { color: var(--tn_green); }
+.code :global(.token.comment) { color: var(--tn_grey); }
+.code :global(.token.punctuation) { color: var(--tn_lavender); }
+.code :global(.token.constant) { color: var(--tn_orange); }
+.code :global(.token.function) { color: var(--tn_cyan); }
 
 /* ---- Table ---- */
 .tableWrap {
