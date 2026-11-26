@@ -20,6 +20,7 @@ const projects = [
   { id: 'charges', title: 'Charges', desc: 'Place charges and simulate motion over time', img: '/software/thumbnails/charges.png', href: 'https://echotops.github.io/charges/', external: true, tags: ['Physics'] },
   { id: 'relativity', title: 'Relativity', desc: 'See how Lorentz transformations act on vectors in spacetime', img: '/software/thumbnails/minkowski.png', href: 'https://echotops.github.io/minkowski-diagrams/', external: true, tags: ['Physics'] },
   { id: 'fluids', title: 'Fluids', desc: 'Simulate fluid flow around objects', img: '/software/thumbnails/fluid.png', href: '/software/projects/fluids', internal: true, tags: ['Physics'] },
+  { id: 'csv-plotter', title: 'CSV Plotter', desc: 'Plot, filter, and explore CSV data entirely in the browser', img: '/software/thumbnails/csv-plotter.png', href: 'https://echotops.github.io/csv-plotter/', external: true, tags: ['Physics'] },
 ]
 
 const filters = [
